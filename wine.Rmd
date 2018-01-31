@@ -1,0 +1,79 @@
+---
+title: "Red wine quality"
+output: html_notebook
+---
+In this work we are going to predict the __Red_wine quality__ based on a number of chemical properties like pH, alcohol...etc
+
+
+
+###*__Introduction:__* 
+
+The predidctors are __10__ tests made on the wine (e.g __PH__ value) and the output is made by __3__ experts, where each one rates the quality of the wine from __0__ (_very bad_) to __10__ (_very exellent_).
+The dataset contains __1,599__ measurments and __11__ variables.
+
+####*__1- Loading data and required packages: __*
+
+Loading the needed packages for data manupilation, visualization and model building...
+```{r}
+library(data.table)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(tidyr)
+library(ggplot2)
+library(caret) 
+library(AppliedPredictiveModeling)
+```
+Loading the *csv* file containing the dataset...
+```{r}
+setwd("D:/Data analysis/code/R/R introduction/Wine")
+data <- read.csv("winequality-red.csv", header = TRUE,sep = ";")
+```
+
+####*__2- A quick view on the dataset: __*
+```{r}
+str(data)
+print(data)
+```
+
+A general summary of the dataset ( *min*, *mean*, *max*, *1st Q*, *3d Q* and the *median* of each variable)...
+```{r}
+summary(data)
+```
+
+####*__2- Univariate exploration: __*
+
+In this section each variable, starting from the *quality*, will be explored to make some observations from:
+
+* __*Spectral analysis *__: *distribution*, *skewness* and *kurtosis* using __Histogram__ plots.
+
+* __*Central tendecy and Dispersion measurements*__: *Mean*, *Median*, *Min*, *Max*, *Mode*, *Range*, *IQR*, *variance*, *SD*, *Outlines* with the help of __Boxplots__. 
+
+* __*The existance of missed values*__.
+
+##### *__2-2 quality: __*
+
+a quick summary...
+```{r}
+summary(data$quality)
+```
+
+Boxplot to visualize the centrality of *quality*
+```{r}
+ggplot(data = data, aes(1,y=quality))+
+  geom_boxplot(fill = "white", colour = "#3366FF",outlier.color = "blue")+
+  geom_jitter(width = 0.2,color = "red",alpha= 0.2)
+
+
+```
+Histogram...
+```{r}
+ggplot(data=data ,aes(quality))+
+ geom_histogram(position  = "identity" ,binwidth = 0.5,color = "#3366FF",aes(mapping=0.1))+
+  
+  geom_density(color = "blue")
+
+```
+
+
+
