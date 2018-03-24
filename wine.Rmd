@@ -1,6 +1,8 @@
 ---
 title: "Red wine quality"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 In this work we are going to predict the __Red_wine quality__ based on a number of chemical properties like pH, alcohol...etc
 
@@ -14,26 +16,25 @@ The dataset contains __1,599__ measurments and __11__ variables.
 ####*__1- Loading data and required packages: __*
 
 Loading the needed packages for data manupilation, visualization and model building...
-```{r}
+```{r message=FALSE ,echo=FALSE}
 library(data.table)
 library(dplyr)
 library(tidyr)
 library(lubridate)
-library(tidyr)
+library(rpart)
 library(ggplot2)
 library(caret) 
 library(AppliedPredictiveModeling)
 ```
 Loading the *csv* file containing the dataset...
 ```{r}
-setwd("D:/Data analysis/code/R/R introduction/Wine")
+setwd("C:/Users/folio/Desktop/Red_wine_quality_analysis-master/data")
 data <- read.csv("winequality-red.csv", header = TRUE,sep = ";")
 ```
 
 ####*__2- A quick view on the dataset: __*
 ```{r}
 str(data)
-print(data)
 ```
 
 A general summary of the dataset ( *min*, *mean*, *max*, *1st Q*, *3d Q* and the *median* of each variable)...
@@ -41,7 +42,7 @@ A general summary of the dataset ( *min*, *mean*, *max*, *1st Q*, *3d Q* and the
 summary(data)
 ```
 
-####*__2- Univariate exploration: __*
+####*__3- Rpart model: __*
 
 In this section each variable, starting from the *quality*, will be explored to make some observations from:
 
@@ -51,7 +52,7 @@ In this section each variable, starting from the *quality*, will be explored to 
 
 * __*The existance of missed values*__.
 
-##### *__2-2 quality: __*
+##### *__ quality: __*
 
 a quick summary...
 ```{r}
@@ -74,6 +75,30 @@ ggplot(data=data ,aes(quality))+
   geom_density(color = "blue")
 
 ```
+Histogram of all variables
+```{r}
+td <- gather(data, key = "key", value = "value")
+ggplot(td, aes(x = value)) +
+ geom_histogram(fill = "grey20", binwidth = .01) +
+  facet_wrap(~key , scales = "free")
+```
+All variables against quality
+```{r}
+td2 <- gather(data,-quality,-pH, key = "key", value = "value")
+ggplot(td2, aes(x = quality,y = value)) +
+  geom_point(alpha =0.4) +
+  geom_smooth(method = "lm")+
+  facet_wrap(~key , scales = "free")
+```
 
 
+
+
+```{r}
+tree <- rpart(quality ~ ., 
+  data = data)
+plotcp(tree)
+plot(tree, uniform = TRUE)
+text(tree, use.n = TRUE, cex = 0.75)
+```
 
